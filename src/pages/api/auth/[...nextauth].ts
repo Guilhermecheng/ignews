@@ -18,18 +18,40 @@ export default NextAuth({
       },
     }),
   ],
+  
   callbacks: {
     async signIn({ user, account, profile, email, credentials }) {
       const e_mail = user.email;
 
-      await fauna.query(
-        q.Create(
-          q.Collection('users'),
-          { data: { email: e_mail } }
-        )
-      )
+      try {
+        await fauna.query(
+          q.If(
+            q.Not(
+              q.Exists(
+                q.Match(
+                  q.Index('user_by_email'),
+                  q.Casefold(user.email)
+                )
+              )
+            ),
+            q.Create(
+              q.Collection('users'),
+              { data: { email: e_mail } }
+            ),
+            q.Get(
+              q.Match(
+                q.Index('user_by_email'),
+                q.Casefold(user.email)
+              )
+            )
+          )          
+        )  
+        
+        return true
+      } catch {
 
-      return true
+        return false
+      }
     },
   }
 })
