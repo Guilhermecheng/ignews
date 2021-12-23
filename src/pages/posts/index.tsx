@@ -31,7 +31,7 @@ export default function Posts({ posts }: PostsProps) {
 
                     {posts.map((post) => {
                         return (
-                            <Link href={`/posts/${post.slug}`}>
+                            <Link href={`/posts/${post.slug}`} key={post.slug}>
                                 <a key={post.slug}>
                                     <time>{post.updatedAt}</time>
                                     <strong>{post.title}</strong>
