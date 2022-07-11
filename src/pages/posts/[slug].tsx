@@ -44,7 +44,8 @@ export const getServerSideProps: GetServerSideProps = async ({ req, params }) =>
     if(!session?.activeSubscription) {
         return {
             redirect: {
-                destination: `/posts/preview/${slug}`,
+                destination: `/`,
+                // destination: `/posts/preview/${slug}`,
                 permanent: false,
             }
         }
